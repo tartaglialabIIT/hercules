@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+
+# OS
+.DS_Store
+
+# Large models / weights (IMPORTANT)
+*.pkl
+*.h5
+*.ckpt
+
+# Logs
+*.log

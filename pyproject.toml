@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hercules-rbp"
+version = "0.1.0"
+description = "Residue-level RNA-binding propensity prediction"
+authors = [{name="Jonathan Fiorentino"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pandas",
+    "joblib",
+    "tensorflow",
+    "proteinbert",
+    "requests"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+hercules = ["data/**"]
