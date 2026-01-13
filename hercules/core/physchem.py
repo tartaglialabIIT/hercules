@@ -3,7 +3,13 @@ import ast
 import csv
 import numpy as np
 from glob import glob
-from importlib.resources import files
+#from importlib.resources import files
+try:
+    # Python ≥ 3.9
+    from importlib.resources import files
+except ImportError:
+    # Python 3.8
+    from importlib_resources import files
 import json
 
 def transformSecDict(seq,dicto):
@@ -40,21 +46,21 @@ def compute_chemphysProfiles(seq,listofscalesJSON, smth=1, chargeNorm=False):
         if chargeNorm:
             if 'charge' in i:
 
-                profiles.append(smooth((trasformSeqFromJson(seq,i, smth=1)+1)/2,smth))
+                profiles.append(smooth((transformSeqFromJson(seq,i, smth=1)+1)/2,smth))
             else:
-                profiles.append(trasformSeqFromJson(seq,i, smth=smth))
+                profiles.append(transformSeqFromJson(seq,i, smth=smth))
         else:
-            profiles.append(trasformSeqFromJson(seq,i, smth=smth))
+            profiles.append(transformSeqFromJson(seq,i, smth=smth))
 
     return np.array(profiles)
 
 def load_physchem():
-    scale_dir = files("hercules.data") / "chemphys_scales"
+    scale_dir = files("hercules.core.data") / "chemphys_scales"
     scales = glob(str(scale_dir / "*.json"))
 
     names = [s.split("/")[-1].replace(".json", "") for s in scales]
 
-    en_path = files("hercules.data") / "elasticnet.csv"
+    en_path = files("hercules.core.data") / "elasticnet.csv"
     EN = {}
     with open(en_path) as f:
         for k, v in csv.reader(f):

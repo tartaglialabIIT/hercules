@@ -1,13 +1,12 @@
 # hercules/profiles.py
 import numpy as np
-from .attention import calculate_attentions
-from .physchem import load_physchem
-from .model import load_model_generator
-from catgranuleFunctions import compute_chemphysProfiles
+from .proteinbert import calculate_attentions
+from .physchem import load_physchem,compute_chemphysProfiles
+from ..models import load_model_generator
 
 alpha = 0.2
 
-_model_generator, _input_encoder = load_model_generator()
+_model_generator, _input_encoder, _output_spec = load_model_generator()
 _scales, _sel_idx, _weights = load_physchem()
 
 def compute_profile(sequence: str) -> np.ndarray:
