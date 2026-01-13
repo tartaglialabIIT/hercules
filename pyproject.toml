@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Residue-level RNA-binding propensity prediction"
 authors = [{name="Jonathan Fiorentino"}]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "pandas",
@@ -18,8 +18,8 @@ dependencies = [
     "requests"
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+#[tool.setuptools]
+#package-dir = {"" = "src"}
 
 [tool.setuptools.package-data]
-hercules = ["data/**"]
+hercules = ["core/data/**"]
