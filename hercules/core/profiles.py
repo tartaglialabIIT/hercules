@@ -1,6 +1,6 @@
 # hercules/profiles.py
 import numpy as np
-from .proteinbert import calculate_attentions
+from .proteinbert import get_attention_profile
 from .physchem import load_physchem,compute_chemphysProfiles
 from ..models import load_model_generator
 
