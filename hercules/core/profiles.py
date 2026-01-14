@@ -10,9 +10,7 @@ _model_generator, _input_encoder, _output_spec = load_model_generator()
 _scales, _sel_idx, _weights = load_physchem()
 
 def compute_profile(sequence: str) -> np.ndarray:
-    model = _model_generator.create_model(len(sequence) + 2)
-
-    attention = calculate_attentions(model, _input_encoder, sequence)
+    attention = get_attention_profile(sequence)
     L = len(attention)
 
     physchem = compute_chemphysProfiles(sequence, _scales)

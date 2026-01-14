@@ -40,10 +40,19 @@ def calculate_attentions(model, input_encoder, seq):
         for l in model.layers
         if "GlobalAttention" in str(type(l))
     ]
+    invoke_model_attentions = K.function(model_inputs, model_attentions)
+    attention_values = invoke_model_attentions(X)
+    merged_attention_values = []
+    for layer_vals in attention_values:
+        for head_vals in layer_vals:
+            merged_attention_values.append(head_vals)
+    
+    attention_values = np.array(merged_attention_values)
+    return attention_values, seq_tokens
 
-    fn = K.function(model_inputs, model_attentions)
-    att = fn(X)
-    merged = np.concatenate([head for layer in att for head in layer]) if att else np.zeros((len(seq), 1))
-    return np.mean(merged, axis=0)[1:-1] if merged.ndim > 1 else merged
-    #merged = np.concatenate([head for layer in att for head in layer])
-    #return np.mean(merged, axis=0)[1:-1]
+def get_attention_profile(seq):
+    seq_len = len(seq)+2
+    model = model_generator.create_model(seq_len)
+    attention_values, seq_tokens = calculate_attentions(model, input_encoder, seq, seq_len)
+    # mean over heads
+    return np.mean(attention_values, axis=0)[1:-1]  # shape [L,]
