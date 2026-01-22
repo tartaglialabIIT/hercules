@@ -103,11 +103,6 @@ def _load_sequences(
     seqs = [fetch_sequence(uid) for uid in ids]
     return ids, seqs
 
-
-# -------------------------
-# Public API
-# -------------------------
-
 # -------------------------
 # Public API
 # -------------------------
