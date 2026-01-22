@@ -43,7 +43,5 @@ def fused_global_score(sequences, ids=None):
 
     return pd.DataFrame({
         "Protein": ids,
-        "PBERT_global": pb_scores,
-        "PhysChem": physchem_means,
         "HERCULES_global": fused
     })
