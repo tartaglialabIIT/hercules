@@ -1,5 +1,7 @@
 import warnings
 import os
+from .plots import plot_profile, plot_mutagenesis_heatmap
+
 
 # -------------------------------
 # Suppress all Python warnings
