@@ -47,7 +47,8 @@ pip install \
   pandas==2.0.3 \
   h5py==3.11.0 \
   lxml==6.0.2 \
-  pyfaidx==0.9.0.3
+  pyfaidx==0.9.0.3 \
+  tqdm
 ```
 
 Note
