@@ -15,16 +15,36 @@ HERCULES can compute profiles from:
 
 ## 🚀 Installation
 
-Clone the repository and install locally:
+Follow these steps to install **Hercules** and its dependencies:
+
+1. **Create a Conda environment with Python 3.9**
 
 ```bash
+conda create -n hercules python=3.9
+conda activate hercules
+
+2.	Install basic dependencies including PyTorch
+
+conda install -c conda-forge numpy pandas seaborn matplotlib tensorflow lxml pyfaidx
+conda install pytorch torchvision torchaudio cpuonly -c pytorch -c conda-forge
+pip install tensorflow-addons==0.13.0
+
+3.	Clone and install ProteinBERT
+
+git clone https://github.com/nadavbra/protein_bert.git
+cd protein_bert
+git submodule init
+git submodule update
+python setup.py install
+cd ..
+
+4.	Clone and install Hercules
+
 git clone https://github.com/your-username/hercules.git
 cd hercules
 pip install .
 
-⚠️ Note
-HERCULES relies on proteinbert and tensorflow. GPU is optional but recommended
-for large-scale or batch usage.
+5.	HERCULES usage
 
 import hercules
 
