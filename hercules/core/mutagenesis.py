@@ -1,6 +1,7 @@
 import pandas as pd
 from .profiles import compute_profile
 from joblib import Parallel, delayed
+from tqdm.auto import tqdm
 import os
 
 AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
@@ -20,16 +21,38 @@ def _mutate_position(i, wt_aa, sequence, wt_mean):
         })
     return records
 
-def mutagenesis_scan(sequence):
+def mutagenesis_scan(sequence: str, n_jobs: int = 1, show_progress: bool = True) -> pd.DataFrame:
+    """
+    Perform in silico mutagenesis on a single protein sequence.
+
+    Parameters
+    ----------
+    sequence : str
+        Protein sequence
+    n_jobs : int
+        Number of parallel jobs (-1 to use all cores)
+    show_progress : bool
+        Show tqdm progress bar
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with columns: position, wt, mutant, delta_score
+    """
     wt_profile = compute_profile(sequence)
     wt_mean = wt_profile.mean()
 
-    n_cores = os.cpu_count() or 2
+    if n_jobs == -1:
+        n_jobs = os.cpu_count() or 1
 
-    # Parallel over positions (joblib handles batching efficiently)
-    results = Parallel(n_jobs=n_cores)(
-        delayed(_mutate_position)(i, aa, sequence, wt_mean) 
-        for i, aa in enumerate(sequence)
+    positions = list(enumerate(sequence))
+    iterator = positions
+    if show_progress and n_jobs != 1:
+        iterator = tqdm(positions, desc="Mutagenesis scanning")
+
+    results = Parallel(n_jobs=n_jobs)(
+        delayed(_mutate_position)(i, aa, sequence, wt_mean)
+        for i, aa in iterator
     )
 
     # Flatten list of lists
