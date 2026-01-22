@@ -8,6 +8,9 @@ from hercules.models.fusion import fused_global_score
 from hercules.models.loaders import load_model_generator
 from hercules.core.proteinbert import proteinbert_global_score
 from functools import lru_cache
+from joblib import Parallel, delayed
+from tqdm.auto import tqdm
+import os
 
 @lru_cache(maxsize=1)
 def _get_proteinbert():
@@ -112,12 +115,36 @@ def _load_sequences(
 def profiles(
     sequences: Union[str, List[str]] = None,
     uniprot_ids: Union[str, List[str]] = None,
+    n_jobs: int = 1,
+    show_progress: bool = True,
 ) -> pd.DataFrame:
     """
     Compute HERCULES RNA-binding profiles.
+
+    Parameters
+    ----------
+    n_jobs : int
+        Number of parallel jobs. Use -1 to use all available cores.
+    show_progress : bool
+        Show tqdm progress bar.
     """
     ids, seqs = _load_sequences(sequences, uniprot_ids)
-    profiles = [compute_profile(seq) for seq in seqs]
+
+    # Serial fallback (default & safest)
+    if n_jobs == 1:
+        profiles = [compute_profile(seq) for seq in seqs]
+
+    else:
+        if n_jobs == -1:
+            n_jobs = os.cpu_count() or 1
+
+        iterator = seqs
+        if show_progress:
+            iterator = tqdm(seqs, desc="Computing HERCULES profiles")
+
+        profiles = Parallel(n_jobs=n_jobs, backend="loky")(
+            delayed(compute_profile)(seq) for seq in iterator
+        )
 
     return pd.DataFrame({
         "Protein": ids,
