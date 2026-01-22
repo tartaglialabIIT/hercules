@@ -1,15 +1,16 @@
 # HERCULES
 
-**HERCULES** is a Python package to compute **residue-level RNA-binding propensity profiles**
-for proteins, using a hybrid approach that combines:
+**HERCULES** is a Python package to compute **residue-level RNA-binding propensity**
+for proteins from sequence, using a multi-task approach that combines:
 
-- protein language model attention (ProteinBERT)
+- fine-tuned protein language model attention (ProteinBERT)
 - physico-chemical amino-acid features
-- a supervised, fine-tuned model for RNA-binding prediction
 
-HERCULES can compute profiles from:
-- a **protein sequence provided by the user**
-- a **UniProt accession**, automatically downloaded
+to compute:
+
+- a global RNA-binding propensity score
+- a residue-level RNA-binding propensity profile
+- a mutational scanning of a protein, predicting the effect of mutations on RNA-binding propensity
 
 ---
 
@@ -99,34 +100,29 @@ print("HERCULES installation successful")
 EOF
 ```
 
-9.	**HERCULES usage**
+9. **Using HERCULES in Jupyter**
 
-See the tutorial in the Jupyter notebook for HERCULES usage.
+If you want to run HERCULES in a Jupyter notebook please install the following dependencies:
+```
+pip install typing-extensions<4.6.0
+pip install \
+  notebook==6.5.4 \
+  traitlets==5.9.0 \
+  ipykernel==6.16.2 \
+  jupyter-core==4.12.0 \
+  jupyter-client==7.4.9
+```
 
-📈 Output interpretation
-	•	Higher values indicate higher predicted RNA-binding propensity
-	•	Profiles are continuous, not binary
-	•	Designed for:
-	•	visualization
-	•	domain enrichment analysis
-	•	comparison across algorithms
+Next, add the hercules environment to your jupyter kernels:
 
-🧠 **Method overview**
+```
+conda activate hercules
+python -m ipykernel install --user --name hercules --display-name "Python (Hercules)"
+```
 
-HERCULES computes RNA-binding propensity as a combination of:
-	1.	Attention-based signal
-Mean attention over all ProteinBERT global-attention heads.
-	2.	Physico-chemical signal
-A weighted combination of selected amino-acid scales
-learned via elastic-net regression.
+10.	**HERCULES usage**
 
-The final profile is:
-final_profile = L · attention_profile + α · mean_physchem
-
-where:
-	•	L is protein length
-	•	α is a scaling factor (default: 0.2)
-
+See the tutorial Jupyter notebook for HERCULES usage.
 
 Run tests with:
 ```
@@ -135,7 +131,7 @@ pytest
 
 📜 **License**
 
-HERCULES is distributed under XXX license
+HERCULES is distributed under MIT license
 
 📫 **Contact**
 
