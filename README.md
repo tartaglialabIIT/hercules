@@ -47,8 +47,7 @@ pip install \
   pandas==2.0.3 \
   h5py==3.11.0 \
   lxml==6.0.2 \
-  pyfaidx==0.9.0.3 \
-  tqdm
+  pyfaidx==0.9.0.3
 ```
 
 Note
@@ -80,8 +79,16 @@ git clone https://github.com/tartaglialabIIT/hercules.git
 cd hercules
 pip install .
 ```
+7. **Install final dependencies**
 
-7. **Test the installation**
+```
+conda install matplotlib seaborn -y
+```
+
+```
+pip install tqdm
+```
+8. **Test the installation**
 
 Run a minimal test to verify that HERCULES and ProteinBERT interact correctly:
 ```
@@ -92,7 +99,7 @@ print("HERCULES installation successful")
 EOF
 ```
 
-8.	**HERCULES usage**
+9.	**HERCULES usage**
 
 See the tutorial in the Jupyter notebook for HERCULES usage.
 
