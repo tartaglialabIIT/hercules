@@ -17,48 +17,83 @@ HERCULES can compute profiles from:
 
 Follow these steps to install **Hercules** and its dependencies:
 
-1. **Create a Conda environment with Python 3.9**
+1. **Create a Conda environment with Python 3.8**
 
-```bash
-conda create -n hercules python=3.9
+We recommend using Python 3.8, which is fully compatible with ProteinBERT and HERCULES.
+
+```
+conda create -n hercules python=3.8 -y
 conda activate hercules
+```
 
-2.	Install basic dependencies including PyTorch
+2. **Force Intel stack first**
+```
+conda install -y intel-openmp=2021.4.0 mkl=2021.4.0 -c anaconda
+```
 
-conda install -c conda-forge numpy pandas seaborn matplotlib tensorflow lxml pyfaidx
-conda install pytorch torchvision torchaudio cpuonly -c pytorch -c conda-forge
-pip install tensorflow-addons==0.13.0
+3. **Install PyTorch from anaconda (NOT conda-forge, NOT pip)**
+```
+conda install pytorch=1.12.1 cpuonly -c pytorch
+```
 
-3.	Clone and install ProteinBERT
+4. **Install TensorFlow and core dependencies**
 
+Install the versions tested with ProteinBERT 1.0.0:
+```
+pip install \
+  tensorflow==2.13.1 \
+  tensorflow-addons==0.21.0 \
+  numpy==1.24.3 \
+  pandas==2.0.3 \
+  h5py==3.11.0 \
+  lxml==6.0.2 \
+  pyfaidx==0.9.0.3
+```
+
+Note
+GPU support is optional. For CPU-only systems, the standard TensorFlow package is sufficient.
+
+5. **Clone and install ProteinBERT**
+
+```
 git clone https://github.com/nadavbra/protein_bert.git
 cd protein_bert
 git submodule init
 git submodule update
 python setup.py install
 cd ..
+```
 
-4.	Clone and install Hercules
+Verify the installation:
+```
+python - << EOF
+import proteinbert
+print("ProteinBERT installed successfully")
+EOF
+```
 
-git clone https://github.com/your-username/hercules.git
+6.	**Clone and install Hercules**
+
+```
+git clone https://github.com/tartaglialabIIT/hercules.git
 cd hercules
 pip install .
+```
 
-5.	HERCULES usage
+7. **Test the installation**
 
+Run a minimal test to verify that HERCULES and ProteinBERT interact correctly:
+```
+python - << EOF
 import hercules
+hercules.api.profiles("MGGKWSKS")
+print("HERCULES installation successful")
+EOF
+```
 
-sequence = "MSEQNNTEMTFQIQRIYTKDISFEAPNAPHVFQKDW..."
-profile = hercules.from_sequence(sequence)
+8.	**HERCULES usage**
 
-print(profile.shape)   # (L,)
-
-import hercules
-
-profile = hercules.from_uniprot("P35637")
-
-The returned object is a NumPy array of length L, where L is the protein length.
-Each value represents the RNA-binding propensity of the corresponding residue.
+See the tutorial in the Jupyter notebook for HERCULES usage.
 
 📈 Output interpretation
 	•	Higher values indicate higher predicted RNA-binding propensity
@@ -68,7 +103,7 @@ Each value represents the RNA-binding propensity of the corresponding residue.
 	•	domain enrichment analysis
 	•	comparison across algorithms
 
-🧠 Method overview
+🧠 **Method overview**
 
 HERCULES computes RNA-binding propensity as a combination of:
 	1.	Attention-based signal
@@ -84,29 +119,18 @@ where:
 	•	L is protein length
 	•	α is a scaling factor (default: 0.2)
 
-hercules/
-├── api.py          # public API
-├── profiles.py     # core computation
-├── attention.py    # attention extraction
-├── physchem.py     # physico-chemical features
-├── uniprot.py      # UniProt sequence download
-├── model.py        # model loading
-└── data/           # model weights and scales
 
 Run tests with:
+```
 pytest
+```
 
-Tests are designed to:
-	•	check API correctness
-	•	avoid long model execution
-	•	validate shapes and basic behavior
+📜 **License**
 
-📜 License
+HERCULES is distributed under XXX license
 
-Specify your license here (e.g. MIT, BSD-3, CC-BY-NC, etc.).
-
-📫 Contact
+📫 **Contact**
 
 Jonathan Fiorentino & Michele Monti
 For questions, issues, or collaborations, please open a GitHub issue
-or contact the author directly.
+or contact the authors directly.
