@@ -15,7 +15,7 @@ HERCULES can compute profiles from:
 
 ## 🚀 Installation
 
-Follow these steps to install **Hercules** and its dependencies:
+Follow these steps to install **Hercules** and its dependencies (use the bash script install_hercules.sh to install all the dependencies automatically):
 
 1. **Create a Conda environment with Python 3.8**
 
