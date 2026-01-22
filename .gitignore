@@ -20,6 +20,9 @@ env/
 
 # Large models / weights (IMPORTANT)
 *.pkl
+
+# BUT keep ProteinBERT pretrained weights (tracked via Git LFS)
+!hercules/models/weights/proteinbert_weights.pkl
 *.h5
 *.ckpt
 
