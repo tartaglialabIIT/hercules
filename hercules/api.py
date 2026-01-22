@@ -167,9 +167,27 @@ def global_fused_score(
 def mutagenesis(
     sequence: str = None,
     uniprot_id: str = None,
+    n_jobs: int = 1,
+    show_progress: bool = True,
 ) -> pd.DataFrame:
     """
     Perform in silico mutagenesis on a single protein.
+
+    Parameters
+    ----------
+    sequence : str
+        Protein sequence
+    uniprot_id : str
+        UniProt ID of the protein
+    n_jobs : int
+        Number of parallel jobs (-1 to use all available cores)
+    show_progress : bool
+        Show a progress bar during computation
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with columns: position, wt, mutant, delta_score
     """
     if sequence is None and uniprot_id is None:
         raise ValueError("Provide sequence or uniprot_id")
@@ -180,4 +198,5 @@ def mutagenesis(
     if uniprot_id is not None:
         sequence = fetch_sequence(uniprot_id)
 
-    return mutagenesis_scan(sequence)
+    # Call the updated scan with parallelization and progress
+    return mutagenesis_scan(sequence, n_jobs=n_jobs, show_progress=show_progress)
