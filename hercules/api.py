@@ -55,7 +55,25 @@ def _load_sequences(
         Dict[str, str],
     ] = None,
     uniprot_ids: Union[str, List[str]] = None,
+    sequence_ids: Union[str, List[str]] = None,
 ):
+    """
+    Load sequences and return (ids, sequences).
+
+    Parameters
+    ----------
+    sequences : str, list, dict, or list of (id, seq)
+        Raw sequences, FASTA path/string, or dict/list with ids
+    uniprot_ids : str or list
+        UniProt IDs to fetch sequences
+    sequence_ids : list
+        Optional list of IDs corresponding to sequences (must match length)
+
+    Returns
+    -------
+    ids : list of str
+    sequences : list of str
+    """
     if sequences is None and uniprot_ids is None:
         raise ValueError("Provide either sequences or uniprot_ids")
 
@@ -72,7 +90,9 @@ def _load_sequences(
             fasta = sequences
         else:
             # single raw sequence
-            return ["seq_0"], [sequences]
+            seqs = [sequences]
+            ids = ["seq_0"] if sequence_ids is None else [sequence_ids]
+            return ids, seqs
 
         return _parse_fasta(fasta)
 
@@ -93,7 +113,12 @@ def _load_sequences(
     # List of sequences only
     # ------------------------
     if isinstance(sequences, list):
-        ids = [f"seq_{i}" for i in range(len(sequences))]
+        if sequence_ids is not None:
+            if len(sequence_ids) != len(sequences):
+                raise ValueError("Length of sequence_ids must match sequences")
+            ids = list(sequence_ids)
+        else:
+            ids = [f"seq_{i}" for i in range(len(sequences))]
         return ids, sequences
 
     # ------------------------
