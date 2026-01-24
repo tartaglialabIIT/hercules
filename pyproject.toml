@@ -22,3 +22,4 @@ dependencies = [
 
 [tool.setuptools.package-data]
 hercules = ["core/data/**"]
+"hercules.models.weights" = ["*.pt","*.pkl", "*.joblib", "*.npy", "*.json"]
