@@ -62,15 +62,14 @@ if [ ! -d "protein_bert" ]; then
 fi
 
 conda run -n "$ENV_NAME" bash -c "cd protein_bert && git submodule update --init --recursive && python setup.py install"
-
+cd ..
 # ------------------------
 # Step 6: Clone and install Hercules
 # ------------------------
-echo "[6/8] Cloning and installing Hercules..."
-if [ ! -d "hercules" ]; then
-    git clone https://github.com/tartaglialabIIT/hercules.git
-fi
+git lfs install
+git lfs pull
 
+echo "[6/8] Installing Hercules..."
 conda run -n "$ENV_NAME" bash -c "cd hercules && pip install ."
 
 # ------------------------
