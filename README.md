@@ -16,7 +16,15 @@ to compute:
 
 ## 🚀 Installation
 
-Follow these steps to install **Hercules** and its dependencies (use the bash script install_hercules.sh to install all the dependencies automatically):
+First, clone this repository. Then, please use the bash script **install_hercules.sh** to install all the dependencies automatically.
+
+Otherwise follow these instructions to install **Hercules** and its dependencies step-by-step:
+
+0. **Clone the hercules Github repo**
+
+```
+git clone https://github.com/tartaglialabIIT/hercules.git
+```
 
 1. **Create a Conda environment with Python 3.8**
 
@@ -73,10 +81,11 @@ print("ProteinBERT installed successfully")
 EOF
 ```
 
-6.	**Clone and install Hercules**
+6.	**Install Hercules**
 
 ```
-git clone https://github.com/tartaglialabIIT/hercules.git
+git lfs install
+git lfs pull
 cd hercules
 pip install .
 ```
