@@ -25,6 +25,8 @@ fi
 # Ensure conda commands work in script
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
+conda install -n "$ENV_NAME"  -y git-lfs -c conda-forge
+
 # ------------------------
 # Step 2: Install Intel MKL and OpenMP stack
 # ------------------------
