@@ -76,7 +76,7 @@ mkdir -p "$WEIGHTS_DIR"
 cd "$WEIGHTS_DIR"
 
 # Zenodo direct download (record id comes from DOI 10.5281/zenodo.18413892)
-ZENODO_RECORD_ID="18413892"
+ZENODO_RECORD_ID="18413893"
 WEIGHTS_TAR="proteinbert_weights.tar.gz"
 WEIGHTS_URL="https://zenodo.org/records/${ZENODO_RECORD_ID}/files/${WEIGHTS_TAR}?download=1"
 
