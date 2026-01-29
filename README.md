@@ -16,14 +16,23 @@ to compute:
 
 ## 🚀 Installation
 
-First, clone this repository. Then, please use the bash script **install_hercules.sh** to install all the dependencies automatically.
+First, clone this repository.
+For a fully automated setup, we recommend using the provided **install_hercules.sh** script.
 
-Otherwise follow these instructions to install **Hercules** and its dependencies step-by-step:
+```
+git clone https://github.com/tartaglialabIIT/hercules.git
+cd hercules
+chmod +x install_hercules.sh
+./install_hercules.sh
+```
+
+Alternatively, you can install HERCULES and its dependencies manually by following the steps below.
 
 0. **Clone the hercules Github repo**
 
 ```
 git clone https://github.com/tartaglialabIIT/hercules.git
+cd hercules
 ```
 
 1. **Create a Conda environment with Python 3.8**
@@ -81,19 +90,28 @@ print("ProteinBERT installed successfully")
 EOF
 ```
 
-6.	**Downloaded trained proteinBERT weights and install Hercules**
+6.	**Download trained proteinBERT weights and install Hercules**
+Pretrained weights are not included in the repository and must be downloaded separately.
 
+By default, HERCULES looks for weights in:
 ```
-cd hercules
+~/.cache/hercules/weights
+```
+
+Download the weights from Zenodo (DOI: 10.5281/zenodo.18413892):
+```
 mkdir -p ~/.cache/hercules/weights
 cd ~/.cache/hercules/weights
 
-curl -L -O \
-https://github.com/tartaglialabIIT/hercules/releases/download/v1.0.0/proteinbert_weights.tar.gz
+curl -fL -o proteinbert_weights.tar.gz \
+  https://zenodo.org/records/18413892/files/proteinbert_weights.tar.gz?download=1
+
 tar -xzf proteinbert_weights.tar.gz
 ```
 
+Then install HERCULES from the cloned repository:
 ```
+cd hercules
 pip install .
 ```
 7. **Install final dependencies**
