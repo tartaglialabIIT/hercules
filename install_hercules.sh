@@ -53,6 +53,7 @@ conda run -n "$ENV_NAME" pip install \
 # ------------------------
 # Step 5: Clone and install ProteinBERT
 # ------------------------
+cd ..
 echo "[5/8] Cloning and installing ProteinBERT..."
 if [ ! -d "protein_bert" ]; then
     git clone https://github.com/nadavbra/protein_bert.git
