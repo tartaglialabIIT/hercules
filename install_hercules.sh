@@ -25,8 +25,6 @@ fi
 # Ensure conda commands work in script
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
-conda install -n "$ENV_NAME"  -y git-lfs -c conda-forge
-
 # ------------------------
 # Step 2: Install Intel MKL and OpenMP stack
 # ------------------------
@@ -66,11 +64,17 @@ cd ..
 # ------------------------
 # Step 6: Clone and install Hercules
 # ------------------------
-git lfs install
-git lfs pull
+echo "Downloading proteinBERT weights..."
+cd hercules
+mkdir -p ~/.cache/hercules/weights
+cd ~/.cache/hercules/weights
+
+curl -L -O \
+https://github.com/tartaglialabIIT/hercules/releases/download/v1.0.0/proteinbert_weights.tar.gz
+tar -xzf proteinbert_weights.tar.gz
 
 echo "[6/8] Installing Hercules..."
-conda run -n "$ENV_NAME" bash -c "cd hercules && pip install ."
+conda run -n "$ENV_NAME" bash -c "pip install ."
 
 # ------------------------
 # Step 7: Install plotting and progress bar dependencies
