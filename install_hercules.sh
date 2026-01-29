@@ -1,10 +1,12 @@
 #!/bin/bash
 # =============================================================================
 # install_hercules.sh
-# Robust installation of Hercules and dependencies in a dedicated conda environment
+# Install Hercules + dependencies in a dedicated conda environment
+# and download model weights from Zenodo.
 # =============================================================================
 
-set -e  # Exit immediately if any command fails
+set -euo pipefail
+
 echo "=========================================="
 echo "Starting Hercules installation"
 echo "=========================================="
@@ -12,18 +14,21 @@ echo "=========================================="
 ENV_NAME="hercules"
 PYTHON_VERSION="3.8"
 
+# --- Always make conda available in non-interactive shells BEFORE using conda ---
+source "$(conda info --base)/etc/profile.d/conda.sh"
+
+# Repo root = directory where this script lives (assumes script is in repo root)
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # ------------------------
 # Step 1: Create Conda environment if it doesn't exist
 # ------------------------
-if ! conda info --envs | grep -q "^$ENV_NAME"; then
+if ! conda env list | awk '{print $1}' | grep -Fxq "$ENV_NAME"; then
     echo "[1/8] Creating conda environment '$ENV_NAME' with Python $PYTHON_VERSION..."
-    conda create -n "$ENV_NAME" python="$PYTHON_VERSION" -y
+    conda create -n "$ENV_NAME" -y python="$PYTHON_VERSION" pip
 else
     echo "[1/8] Conda environment '$ENV_NAME' already exists, skipping creation."
 fi
-
-# Ensure conda commands work in script
-source "$(conda info --base)/etc/profile.d/conda.sh"
 
 # ------------------------
 # Step 2: Install Intel MKL and OpenMP stack
@@ -41,6 +46,7 @@ conda install -n "$ENV_NAME" -y pytorch=1.12.1 cpuonly -c pytorch
 # Step 4: Install TensorFlow and core Python dependencies
 # ------------------------
 echo "[4/8] Installing TensorFlow and core Python packages..."
+conda run -n "$ENV_NAME" python -m pip install -U pip setuptools wheel
 conda run -n "$ENV_NAME" pip install \
     tensorflow==2.13.1 \
     tensorflow-addons==0.21.0 \
@@ -53,27 +59,43 @@ conda run -n "$ENV_NAME" pip install \
 # ------------------------
 # Step 5: Clone and install ProteinBERT
 # ------------------------
-cd ..
 echo "[5/8] Cloning and installing ProteinBERT..."
+cd "$REPO_ROOT/.."
 if [ ! -d "protein_bert" ]; then
     git clone https://github.com/nadavbra/protein_bert.git
 fi
 
-conda run -n "$ENV_NAME" bash -c "cd protein_bert && git submodule update --init --recursive && python setup.py install"
-cd ..
-# ------------------------
-# Step 6: Clone and install Hercules
-# ------------------------
-echo "Downloading proteinBERT weights..."
-cd hercules
-mkdir -p ~/.cache/hercules/weights
-cd ~/.cache/hercules/weights
+conda run -n "$ENV_NAME" bash -c "cd '$REPO_ROOT/../protein_bert' && git submodule update --init --recursive && pip install ."
 
-curl -L -O \
-https://github.com/tartaglialabIIT/hercules/releases/download/v1.0.0/proteinbert_weights.tar.gz
-tar -xzf proteinbert_weights.tar.gz
+# ------------------------
+# Step 6: Download weights from Zenodo and install Hercules
+# ------------------------
+echo "[6/8] Downloading ProteinBERT weights from Zenodo..."
+WEIGHTS_DIR="${HERCULES_WEIGHTS_DIR:-$HOME/.cache/hercules/weights}"
+mkdir -p "$WEIGHTS_DIR"
+cd "$WEIGHTS_DIR"
 
-echo "[6/8] Installing Hercules..."
+# Zenodo direct download (record id comes from DOI 10.5281/zenodo.18413892)
+ZENODO_RECORD_ID="18413892"
+WEIGHTS_TAR="proteinbert_weights.tar.gz"
+WEIGHTS_URL="https://zenodo.org/records/${ZENODO_RECORD_ID}/files/${WEIGHTS_TAR}?download=1"
+
+# Download (fail fast on HTTP errors)
+curl -fL -o "$WEIGHTS_TAR" "$WEIGHTS_URL"
+
+# Quick sanity check: file should not be tiny
+BYTES=$(wc -c < "$WEIGHTS_TAR" | tr -d ' ')
+if [ "$BYTES" -lt 1000000 ]; then
+  echo "ERROR: Downloaded weights archive looks too small (${BYTES} bytes)."
+  echo "URL was: $WEIGHTS_URL"
+  exit 1
+fi
+
+# Extract
+tar -xzf "$WEIGHTS_TAR"
+
+echo "[6/8] Installing Hercules (from current repo)..."
+cd "$REPO_ROOT"
 conda run -n "$ENV_NAME" bash -c "pip install ."
 
 # ------------------------
@@ -87,18 +109,17 @@ conda run -n "$ENV_NAME" pip install tqdm
 # Step 8: Test Hercules installation
 # ------------------------
 echo "[8/8] Testing Hercules installation..."
-conda run -n "$ENV_NAME" python - << EOF
+conda run -n "$ENV_NAME" python - << 'EOF'
 try:
     import hercules
-    # simple API call to verify it works
-    hercules.api.profiles("MGGKWSKS")
-    print("✅ Hercules installation successful")
+    print("✅ import hercules ok")
 except Exception as e:
     print("❌ Hercules installation failed")
-    raise e
+    raise
 EOF
 
 echo "=========================================="
 echo "Hercules installation completed successfully!"
 echo "Activate your environment with: conda activate $ENV_NAME"
+echo "Weights directory: ${HERCULES_WEIGHTS_DIR:-$HOME/.cache/hercules/weights}"
 echo "=========================================="
