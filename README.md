@@ -81,12 +81,19 @@ print("ProteinBERT installed successfully")
 EOF
 ```
 
-6.	**Install Hercules**
+6.	**Downloaded trained proteinBERT weights and install Hercules**
 
 ```
-git lfs install
-git lfs pull
 cd hercules
+mkdir -p ~/.cache/hercules/weights
+cd ~/.cache/hercules/weights
+
+curl -L -O \
+https://github.com/tartaglialabIIT/hercules/releases/download/v1.0.0/proteinbert_weights.tar.gz
+tar -xzf proteinbert_weights.tar.gz
+```
+
+```
 pip install .
 ```
 7. **Install final dependencies**
