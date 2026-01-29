@@ -104,7 +104,7 @@ mkdir -p ~/.cache/hercules/weights
 cd ~/.cache/hercules/weights
 
 curl -fL -o proteinbert_weights.tar.gz \
-  https://zenodo.org/records/18413892/files/proteinbert_weights.tar.gz?download=1
+  https://zenodo.org/records/18413893/files/proteinbert_weights.tar.gz?download=1
 
 tar -xzf proteinbert_weights.tar.gz
 ```
