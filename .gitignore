@@ -28,3 +28,5 @@ env/
 
 # Logs
 *.log
+hercules/models/weights/proteinbert_weights.pkl
+hercules/models/weights/proteinbert_weights.tar.gz
