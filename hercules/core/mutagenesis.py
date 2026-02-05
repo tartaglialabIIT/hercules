@@ -17,7 +17,7 @@ def _mutate_position(i, wt_aa, sequence, wt_mean):
             "position": i + 1,
             "wt": wt_aa,
             "mutant": aa,
-            "delta_score": wt_mean - mut_profile.mean(),
+            "delta_score": -(wt_mean - mut_profile.mean()),
         })
     return records
 
