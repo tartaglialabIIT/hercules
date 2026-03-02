@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from .profiles import compute_profile
 from joblib import Parallel, delayed
 from tqdm.auto import tqdm
@@ -17,7 +18,7 @@ def _mutate_position(i, wt_aa, sequence, wt_mean):
             "position": i + 1,
             "wt": wt_aa,
             "mutant": aa,
-            "delta_score": -(wt_mean - mut_profile.mean()),
+            "delta_score": (mut_profile.mean()-wt_mean)/(np.abs(wt_mean)),
         })
     return records
 
