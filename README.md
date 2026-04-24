@@ -12,7 +12,15 @@ to compute:
 - a residue-level RNA-binding propensity profile
 - a mutational scanning of a protein, predicting the effect of mutations on RNA-binding propensity
 
+> **HERCULES is also available as a user-friendly web server at:**  
+> https://tools.tartaglialab.com/hercules
 ---
+## ⚙️ System requirements
+
+HERCULES has been tested on Linux (x86_64) systems using Conda environments.
+
+Due to dependencies on specific versions of TensorFlow, PyTorch, and ProteinBERT,
+we strongly recommend using the provided installation script and environment.
 
 ## 🚀 Installation
 
@@ -163,12 +171,34 @@ Run tests with:
 pytest
 ```
 
+## 📖 Citation
+
+If you use HERCULES in your work, please cite:
+
+Fiorentino, J.\*, Monti, M.\*, Armaos, A., Miltiadis-Vrachnos, D., Di Rienzo, L., & Tartaglia, G. G.  
+**HERCULES: an integrative deep-learning framework for predicting RNA-binding propensity and mutation effects at single-residue resolution**, bioRxiv, 2026  
+DOI: https://doi.org/10.64898/2026.03.17.712455
+
+\* These authors contributed equally to this work.
+
+```
+@article{fiorentino2026hercules,
+  title={HERCULES: an integrative deep-learning framework for predicting RNA-binding propensity and mutation effects at single-residue resolution},
+  author={Fiorentino, Jonathan and Monti, Michele and Armaos, Alexandros and Miltiadis-Vrachnos, Dimitrios and Di Rienzo, Lorenzo and Tartaglia, Gian Gaetano},
+  journal={bioRxiv},
+  pages={2026--03},
+  year={2026},
+  publisher={Cold Spring Harbor Laboratory}
+}
+```
+
 📜 **License**
 
-HERCULES is distributed under MIT license
+HERCULES is distributed under MIT license.
 
 📫 **Contact**
 
 Jonathan Fiorentino & Michele Monti
+
 For questions, issues, or collaborations, please open a GitHub issue
 or contact the authors directly.
